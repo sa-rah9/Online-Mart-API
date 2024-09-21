@@ -40,6 +40,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+#OAuth2PasswordBearer: Used to secure endpoints by requiring token-based authentication. The tokenUrl specifies where to obtain tokens (in this case, the /login endpoint).
 
 app = FastAPI(
     lifespan=lifespan,

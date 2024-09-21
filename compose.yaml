@@ -44,18 +44,19 @@ services:
     ports:
       - "8003:8000" # Expose container port 8000 to host port 8000
 
-  # user-service:
-  #   image: user-mart-api
-  #   build:
-  #     context: ./user-service
-  #     dockerfile: Dockerfile.dev
-  #   volumes:
-  #     - ./user-service:/code # Sync local development directory with the container
-  #   depends_on:
-  #     - broker
-  #     - postgres_user_db
-  #   ports:
-  #     - "8004:8000" # Expose container port 8000 to host port 8000
+  user-service:
+    image: user-mart-api
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./user-service:/code # Sync local development directory with the container
+    depends_on:
+      - broker
+      - postgres_user_db
+      - kafka-ui
+    ports:
+      - "8004:8000" # Expose container port 8000 to host port 8000
 
   # notification-service:
   #   image: notification-api
@@ -125,18 +126,18 @@ services:
 
 
 
-  # postgres_user_db: # User Service database
-  #   image: postgres:latest
-  #   restart: always
-  #   container_name: PostgresUserCont
-  #   environment:
-  #     - POSTGRES_USER=ziakhan
-  #     - POSTGRES_PASSWORD=my_password
-  #     - POSTGRES_DB=mydatabase
-  #   ports:
-  #     - "5484:5432"
-  #   volumes:
-  #     - postgres_user_db:/var/lib/postgresql/data
+  postgres_user_db: # User Service database
+    image: postgres:latest
+    restart: always
+    container_name: PostgresUserCont
+    environment:
+      - POSTGRES_USER=ziakhan
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "5484:5432"
+    volumes:
+      - postgres_user_db:/var/lib/postgresql/data
 
   # postgres_notification_db: # Notification Service database
   #   image: postgres:latest
@@ -175,7 +176,7 @@ services:
     depends_on:
       - postgres_product_db
       - postgres_inventory_db
-      - postgres_order_db
+      # - postgres_order_db
 
     volumes:
       - pgadmin_data:/var/lib/pgadmin
@@ -221,8 +222,8 @@ volumes:
     driver: local@
   postgres_order_db:
     driver: local
-  # postgres_user_db:
-  #   driver: local
+  postgres_user_db:
+    driver: local
   # postgres_notification_db:
   #   driver: local
   # postgres_payment_db:
